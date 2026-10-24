@@ -201,9 +201,9 @@ struct PaywallView: View {
     }
         
     /// Ошибка покупки/восстановления — отклик ошибки; ожидание подтверждения — без отклика.
-    private static func haptic(for alert: AlertPurchase?) -> (@MainActor () -> Void)? {
+    private nonisolated static func haptic(for alert: AlertPurchase?) -> Haptics.Kind? {
         switch alert {
-            case .purchaseFailed, .restoreFailed, .nothingToRestore: Haptics.error
+            case .purchaseFailed, .restoreFailed, .nothingToRestore: .error
             case .purchasePending, nil: nil
         }
     }

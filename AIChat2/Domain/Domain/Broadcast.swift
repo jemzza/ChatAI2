@@ -28,7 +28,7 @@ final class Broadcast<Value: Equatable & Sendable> {
             observers[id] = continuation
             continuation.yield(value)
             continuation.onTermination = { [weak self] _ in
-                Task { @MainActor in self?.observers.removeValue(forKey: id) }
+                Task { @MainActor [weak self] in self?.observers.removeValue(forKey: id) }
             }
         }
     }

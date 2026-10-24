@@ -6,24 +6,28 @@
 import SwiftUI
 import UIKit
 
-@MainActor
+/// Тактильный отклик. `.sensoryFeedback` — только с iOS 17, поэтому UIKit-генераторы.
 enum Haptics {
-    static func tap() {
-        UIImpactFeedbackGenerator(style: .light).impactOccurred()
+    enum Kind: Sendable {
+        case tap
+        case success
+        case error
     }
     
-    static func success() {
-        UINotificationFeedbackGenerator().notificationOccurred(.success)
-    }
-    
-    static func error() {
-        UINotificationFeedbackGenerator().notificationOccurred(.error)
+    static func play(_ kind: Kind) {
+        switch kind {
+            case .tap: UIImpactFeedbackGenerator(style: .light).impactOccurred()
+            case .success: UINotificationFeedbackGenerator().notificationOccurred(.success)
+            case .error: UINotificationFeedbackGenerator().notificationOccurred(.error)
+        }
     }
 }
 
 extension View {
-    func haptic<Value: Equatable>(on value: Value,
-                                  _ feedback: @escaping @MainActor (Value) -> (@MainActor () -> Void)?) -> some View {
-        onChange(of: value) { newValue in feedback(newValue)?() }
+    /// Отклик, когда `value` меняется на значение, для которого `kind` что-то вернул.
+    func haptic<Value: Equatable>(on value: Value, _ kind: @escaping (Value) -> Haptics.Kind?) -> some View {
+        onChange(of: value) { newValue in
+            if let feedback = kind(newValue) { Haptics.play(feedback) }
+        }
     }
 }

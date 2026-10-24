@@ -19,11 +19,10 @@ struct ToastMessage: Equatable, Identifiable {
 }
 
 extension ToastMessage {
-    @MainActor
-    static func haptic(for toast: ToastMessage?) -> (@MainActor () -> Void)? {
+    nonisolated static func haptic(for toast: ToastMessage?) -> Haptics.Kind? {
         switch toast?.kind {
-            case .success: Haptics.success
-            case .failure: Haptics.error
+            case .success: .success
+            case .failure: .error
             case nil: nil
         }
     }

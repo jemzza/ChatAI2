@@ -48,3 +48,8 @@ __pycache__/
 *~
 .idea/
 .vscode/
+
+# Локальные заметки и документация (не часть сдачи)
+CLAUDE.md
+README.md
+docs/
