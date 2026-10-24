@@ -45,6 +45,15 @@ extension AppContainer {
     }
     
     private func makeSubscription(_ subscription: DependencyPlan.Subscription) -> any SubscribableService {
-        return FakeSubscriptionService(isPremium: false)
+        switch subscription {
+            case .apphud:
+                return ApphudSubscriptionService(apiKey: Secrets.apphudAPIKey)
+            case let .fake(isPremium):
+#if DEBUG
+                return FakeSubscriptionService(isPremium: isPremium)
+#else
+                return ApphudSubscriptionService(apiKey: Secrets.apphudAPIKey)
+#endif
+        }
     }
 }
