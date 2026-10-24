@@ -1,0 +1,50 @@
+# Xcode — .xcodeproj коммитим (проект не генерируется из project.yml),
+# но пользовательские данные внутри него игнорируем (см. xcuserdata ниже).
+build/
+DerivedData/
+xcuserdata/
+*.xcuserstate
+*.xcscmblueprint
+*.xccheckout
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# SPM
+.build/
+.swiftpm/
+# Package.resolved не игнорируем — фиксирует версии зависимостей
+
+# Инструменты, которые качает Build.command
+.tools/
+
+# Секреты в открытом виде
+.env
+.env.*
+*.env
+*.secret
+*.secrets
+secrets.json
+*.p8
+*.p12
+*.mobileprovision
+# Файл с ОБФУСЦИРОВАННЫМИ ключами коммитим:
+# без него проект не соберётся сразу после клонирования.
+!AIChat2/AIChat2/Data/Secrets/Secrets.swift
+
+# Python
+__pycache__/
+*.pyc
+
+# Тесты / покрытие
+*.xcresult
+
+# macOS / редакторы
+.DS_Store
+.AppleDouble
+.LSOverride
+*.swp
+*~
+.idea/
+.vscode/
