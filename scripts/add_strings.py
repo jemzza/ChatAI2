@@ -10,7 +10,7 @@ import json
 import sys
 from pathlib import Path
 
-path = Path(__file__).resolve().parent.parent / "AIChat/Resources/Localizable.xcstrings"
+path = Path(__file__).resolve().parent.parent / "AIChat2/Resources/Localizable.xcstrings"
 catalog = json.loads(path.read_text(encoding="utf-8"))
 for pair in sys.argv[1:]:
     key, _, russian = pair.partition("=")

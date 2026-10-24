@@ -7,7 +7,11 @@ import Foundation
 import Combine
 
 enum AppRoute: Hashable {
-
+    /// `nil` — новый чат.
+    case chat(chatId: UUID?)
+    case templates
+    case history(HistoryTab)
+    case settings
 }
 
 enum HistoryTab: Hashable, CaseIterable {

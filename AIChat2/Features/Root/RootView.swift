@@ -21,7 +21,14 @@ struct RootView: View {
                     OnboardingView { router.finishOnboarding() }
                         .transition(.opacity)
                 case .main:
-                    EmptyView()
+                    NavigationStack(path: $router.path) {
+                        MainView(subscription: dependencies.subscription)
+                            .navigationDestination(for: AppRoute.self) { route in
+                                destination(route)
+                                    .toolbar(.hidden, for: .navigationBar)
+                            }
+                            .toolbar(.hidden, for: .navigationBar)
+                    }
                     .transition(.opacity)
             }
         }
@@ -32,5 +39,26 @@ struct RootView: View {
             }
         }
         .environmentObject(router)
+    }
+    
+    @ViewBuilder
+    private func destination(_ route: AppRoute) -> some View {
+        switch route {
+            case .chat, .templates, .history, .settings:
+                UnderConstructionView()
+        }
+    }
+}
+
+/// Временный экран для разделов, которые ещё не готовы.
+private struct UnderConstructionView: View {
+    @EnvironmentObject private var router: AppRouter
+    
+    var body: some View {
+        VStack(spacing: 0) {
+            NavigationHeader { router.pop() }
+            Spacer()
+        }
+        .background(Color.appBackground.ignoresSafeArea())
     }
 }
