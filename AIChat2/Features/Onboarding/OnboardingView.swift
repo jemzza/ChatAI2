@@ -7,8 +7,8 @@ import SwiftUI
 
 struct OnboardingView: View {
     
-    @State private var selection = 0
     let completion: () -> Void
+    @State private var selection = 0
     
     
     var body: some View {
@@ -65,5 +65,5 @@ struct OnboardingView: View {
 }
 
 #Preview {
-    OnboardingView(completion: {})
+    OnboardingView() {}
 }
