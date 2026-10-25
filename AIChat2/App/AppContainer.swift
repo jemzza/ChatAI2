@@ -42,12 +42,47 @@ extension AppContainer {
         let database = try plan.storage == .previewData ? AppDatabase.inMemory() : AppDatabase.onDisk()
         let chats = GRDBChatRepository(database: database)
         try await chats.markGeneratingAsInterrupted()
-        
-        return AppDependencies(
-            subscription: subscription,
-            chats: chats,
-            chatProvider: DolaChatProvider(client: networkClient(service: "dola", subscription: subscription))
+        let chat = ChatService(
+            repository: chats,
+            provider: makeChatProvider(plan.model, subscription: subscription),
+            connectivity: makeConnectivity(plan.network),
+            backgroundTasks: UIKitBackgroundTasks()
         )
+        
+        return AppDependencies(subscription: subscription, chats: chats, chat: chat)
+    }
+    
+    private func makeChatProvider(_ model: DependencyPlan.Model, subscription: any SubscribableService) -> any ChatProvider {
+        switch model {
+            case .live:
+                return DolaChatProvider(client: networkClient(service: "dola", subscription: subscription))
+            case let .demo(slow):
+#if DEBUG
+                return FakeChatProvider(delay: slow ? .seconds(3) : .seconds(1))
+#else
+                return DolaChatProvider(client: networkClient(service: "dola", subscription: subscription))
+#endif
+            case let .failing(kind):
+#if DEBUG
+                let retryAfter: Duration? = kind == .rateLimited ? .seconds(30) : nil
+                return FakeChatProvider(script: .fail(APIError(kind: kind, retryAfter: retryAfter)), delay: .seconds(1))
+#else
+                return DolaChatProvider(client: networkClient(service: "dola", subscription: subscription))
+#endif
+        }
+    }
+    
+    private func makeConnectivity(_ network: DependencyPlan.Network) -> any ConnectivityMonitoring {
+        switch network {
+            case .system:
+                return NetworkConnectivityMonitor()
+            case .offline:
+#if DEBUG
+                return FakeConnectivityMonitor(isOnline: false)
+#else
+                return NetworkConnectivityMonitor()
+#endif
+        }
     }
     
     private func networkClient(service: String, subscription: any SubscribableService) -> any NetworkClient {

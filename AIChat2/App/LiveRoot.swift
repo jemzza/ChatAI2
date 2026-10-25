@@ -19,6 +19,7 @@ struct LiveRoot: View {
     }
     
     @State private var phase = Phase.loading
+    @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
         Group {
@@ -29,6 +30,10 @@ struct LiveRoot: View {
                 case let .ready(dependencies):
                     RootView(dependencies: dependencies, settings: container.settings)
                         .transition(.opacity)
+                        .task { await dependencies.chat.run() }
+                        .onChange(of: scenePhase) { phase in
+                            if phase == .active { dependencies.chat.appDidBecomeActive() }
+                        }
                 case .failed:
                     VStack(spacing: 8) {
                         Image(systemName: "exclamationmark.triangle")

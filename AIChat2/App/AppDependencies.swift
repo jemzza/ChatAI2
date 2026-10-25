@@ -9,5 +9,5 @@ import Foundation
 struct AppDependencies {
     let subscription: any SubscribableService
     let chats: any ChatRepository
-    let chatProvider: any ChatProvider
+    let chat: ChatService
 }
