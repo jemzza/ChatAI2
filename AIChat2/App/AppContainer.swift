@@ -37,25 +37,40 @@ extension AppContainer {
         let database = try plan.storage == .previewData ? AppDatabase.inMemory() : AppDatabase.onDisk()
         let chats = GRDBChatRepository(database: database)
         try await chats.markGeneratingAsInterrupted()
+        let connectivity = makeConnectivity(plan.network)
+        let backgroundTasks = UIKitBackgroundTasks()
         let chat = ChatService(
             repository: chats,
             provider: makeChatProvider(plan.model, subscription: subscription),
-            connectivity: makeConnectivity(plan.network),
-            backgroundTasks: UIKitBackgroundTasks()
+            connectivity: connectivity,
+            backgroundTasks: backgroundTasks
+        )
+        let videos = GRDBVideoRepository(database: database)
+        let videoAPI = makeVideoAPI(plan.storage, subscription: subscription)
+        let media = try FileMediaStore.standard()
+        let video = VideoGenerationService(
+            repository: videos,
+            api: videoAPI,
+            media: media,
+            connectivity: connectivity,
+            backgroundTasks: backgroundTasks
         )
         
         return AppDependencies(
             subscription: subscription,
             chats: chats,
             chat: chat,
-            videoAPI: makeVideoAPI(plan.storage, subscription: subscription),
+            videos: videos,
+            videoAPI: videoAPI,
+            media: media,
+            video: video,
             thumbnails: makeThumbnails(plan.storage)
         )
     }
     
     private func makeVideoAPI(_ storage: DependencyPlan.Storage, subscription: any SubscribableService) -> any VideoAPI {
 #if DEBUG
-        if storage == .previewData { return FakeVideoAPI() }
+        if storage == .previewData { return DemoVideoAPI() }
 #endif
         return PixverseClient(
             client: networkClient(service: "pixverse", subscription: subscription),

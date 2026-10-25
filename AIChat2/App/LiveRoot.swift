@@ -26,8 +26,11 @@ struct LiveRoot: View {
                     RootView(dependencies: dependencies, settings: container.settings)
                         .transition(.opacity)
                         .task { await dependencies.chat.run() }
+                        .task { await dependencies.video.run() }
                         .onChange(of: scenePhase) { phase in
-                            if phase == .active { dependencies.chat.appDidBecomeActive() }
+                            guard phase == .active else { return }
+                            dependencies.chat.appDidBecomeActive()
+                            dependencies.video.appDidBecomeActive()
                         }
                 case .failed:
                     VStack(spacing: 8) {

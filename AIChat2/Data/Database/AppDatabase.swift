@@ -64,6 +64,23 @@ nonisolated struct AppDatabase: Sendable {
                 columns: ["chatId", "createdAt"]
             )
         }
+        migrator.registerMigration("v2") { db in
+            try db.create(table: VideoGenerationRecord.databaseTableName) { t in
+                t.primaryKey("id", .blob)
+                t.column("templateId", .integer).notNull()
+                t.column("templateName", .text).notNull()
+                t.column("aspect", .text).notNull()
+                t.column("quality", .text).notNull()
+                t.column("sourceImageName", .text).notNull()
+                t.column("status", .text).notNull().indexed()
+                t.column("serverId", .integer)
+                t.column("videoURL", .text)
+                t.column("localVideoName", .text)
+                t.column("failureKind", .text)
+                t.column("isViewed", .boolean).notNull().defaults(to: false)
+                t.column("createdAt", .double).notNull().indexed()
+            }
+        }
         return migrator
     }
 }
