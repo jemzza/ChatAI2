@@ -6,20 +6,22 @@
 import Foundation
 import Alamofire
 
-protocol NetworkClient: Sendable {
+nonisolated protocol NetworkClient: Sendable {
     func data(for endpoint: Endpoint) async throws -> Data
 }
 
-extension NetworkClient {
+nonisolated extension NetworkClient {
     func request<T: Decodable>(_ endpoint: Endpoint, as type: T.Type = T.self) async throws -> T {
         let data = try await data(for: endpoint)
         do {
             return try JSONDecoder.snakeCase.decode(T.self, from: data)
+        } catch {
+            throw APIError(kind: .decoding)
         }
     }
 }
 
-final class AFNetworkClient: NetworkClient {
+nonisolated final class AFNetworkClient: NetworkClient {
     
     private let baseURL: URL
     private let session: Session

@@ -3,6 +3,7 @@
 //  AIChat2
 //
 
+import Alamofire
 import Foundation
 
 @MainActor
@@ -42,8 +43,27 @@ extension AppContainer {
         let chats = GRDBChatRepository(database: database)
         try await chats.markGeneratingAsInterrupted()
         
-        return AppDependencies(subscription: subscription, chats: chats)
+        return AppDependencies(
+            subscription: subscription,
+            chats: chats,
+            chatProvider: DolaChatProvider(client: networkClient(service: "dola", subscription: subscription))
+        )
     }
+    
+    private func networkClient(service: String, subscription: any SubscribableService) -> any NetworkClient {
+        let interceptor = NebulaIntercepter(
+            token: Secrets.nebulaAPIToken,
+            appID: Self.apiAppID,
+            userID: { await subscription.userID }
+        )
+        return AFNetworkClient(
+            baseURL: Self.apiBaseURL.appendingPathComponent(service),
+            session: Session(interceptor: interceptor)
+        )
+    }
+    
+    private static let apiAppID = "com.test.test"
+    private static let apiBaseURL = URL(string: "https://nebulaapps.site")!
     
     private func makeSubscription(_ subscription: DependencyPlan.Subscription) -> any SubscribableService {
         switch subscription {

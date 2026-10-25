@@ -5,7 +5,7 @@
 
 import Foundation
 
-struct MultipartBody: Sendable {
+nonisolated struct MultipartBody: Sendable {
     
     struct File: Sendable {
         let name: String

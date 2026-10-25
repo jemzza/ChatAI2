@@ -5,7 +5,7 @@
 
 import Foundation
 
-extension JSONDecoder {
+nonisolated extension JSONDecoder {
     
     static var snakeCase: JSONDecoder {
         let decoder = JSONDecoder()

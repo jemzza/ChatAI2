@@ -5,7 +5,7 @@
 
 import Foundation
 
-struct Endpoint: Sendable {
+nonisolated struct Endpoint: Sendable {
     
     enum Body: Sendable {
         case none
@@ -19,7 +19,7 @@ struct Endpoint: Sendable {
     var body: Body = .none
 }
 
-extension Endpoint {
+nonisolated extension Endpoint {
     
     static func get(_ path: String, query: [URLQueryItem] = []) -> Endpoint {
         Endpoint(method: .get, path: path, query: query)

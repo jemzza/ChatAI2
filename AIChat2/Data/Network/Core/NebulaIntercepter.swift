@@ -6,7 +6,7 @@
 import Foundation
 import Alamofire
 
-struct NebulaIntercepter: RequestInterceptor {
+nonisolated struct NebulaIntercepter: RequestInterceptor {
     
     let token: String
     let appID: String
