@@ -1,8 +1,3 @@
-//
-//  RootView.swift
-//  AIChat2
-//
-
 import SwiftUI
 
 struct RootView: View {
@@ -44,7 +39,9 @@ struct RootView: View {
     @ViewBuilder
     private func destination(_ route: AppRoute) -> some View {
         switch route {
-            case .chat, .templates, .history, .settings:
+            case let .chat(chatId):
+                ChatView(chatId: chatId, dependencies: dependencies)
+            case .templates, .history, .settings:
                 UnderConstructionView()
         }
     }
