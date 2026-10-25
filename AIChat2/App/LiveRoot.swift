@@ -47,7 +47,6 @@ struct LiveRoot: View {
         .animation(.easeInOut(duration: 0.35), value: phase.isReady)
         .task {
             guard case .loading = phase else { return }
-            // Сплэш виден хотя бы секунду — без мигания на быстром запуске.
             async let minimumSplash: Void = (try? await Task.sleep(for: .seconds(1))) ?? ()
             do {
                 let dependencies = try await container.makeDependencies()

@@ -22,7 +22,6 @@ struct PlanCardView: View {
                         }
                     }
                     .foregroundStyle(Color.appAccent)
-                    // Цена — из магазина, уже в валюте пользователя.
                     Text(option.totalPrice)
                         .font(AppFont.subheadline)
                         .foregroundStyle(Color.appTextSecondary)

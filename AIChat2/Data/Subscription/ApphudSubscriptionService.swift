@@ -38,7 +38,6 @@ final class ApphudSubscriptionService: SubscribableService {
     
     func paywallPlans() async throws(SubscriptionError) -> [SubscriptionPlan] {
         let placements = await Apphud.placements()
-        // `main` — id пейвола; на случай, если в дашборде так назван плейсмент, ищем и его.
         let paywall = placements.lazy.compactMap(\.paywall).first { $0.identifier == Self.paywallID }
         ?? placements.first { $0.identifier == Self.paywallID }?.paywall
         guard let paywall else { throw .productsUnavailable }

@@ -5,7 +5,6 @@
 
 import SwiftUI
 
-
 extension ShapeStyle where Self == Color {
     static var appBackground: Color { Color("Background") }
     static var appSurface: Color { Color("Surface") }
@@ -51,25 +50,16 @@ enum AppFont {
 }
 
 enum AppMetrics {
-    /// `safeAreaSideInset` — боковые отступы экранов.
     static let sideInset: CGFloat = 16
-    /// `spacing/cellSpacing`.
     static let cellSpacing: CGFloat = 8
-    /// `spacing/verticalSectionSpacing`.
     static let sectionSpacing: CGFloat = 28
-    /// Карточки тарифов, большие кнопки, поле ввода.
     static let cardRadius: CGFloat = 24
-    /// Строки списков и настроек.
     static let rowRadius: CGFloat = 16
-    /// Высота строки настроек и истории.
     static let rowHeight: CGFloat = 44
-    /// Чипы и бейджи — капсула.
     static let chipRadius: CGFloat = 32
-    /// Высота основной кнопки.
     static let buttonHeight: CGFloat = 50
 }
 
-/// Стили текста сообщений чата (использует `MarkdownView`).
 enum TextStyle {
     case assistantMessage
     case userMessage

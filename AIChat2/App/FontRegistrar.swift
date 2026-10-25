@@ -6,8 +6,6 @@
 import CoreText
 import Foundation
 
-/// Регистрирует Inter из бандла. Info.plist генерируется Xcode (`UIAppFonts` туда
-/// не попадает), поэтому шрифты подключаем в рантайме при запуске.
 enum FontRegistrar {
     private static let fontNames = ["Inter-Regular", "Inter-Medium", "Inter-SemiBold", "Inter-Bold"]
     

@@ -17,7 +17,6 @@ final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
         return true
     }
     
-    /// На переднем плане уведомления не показываем (их и не шлём, см. `NotificationPolicy`).
     nonisolated func userNotificationCenter(
         _ center: UNUserNotificationCenter,
         willPresent notification: UNNotification

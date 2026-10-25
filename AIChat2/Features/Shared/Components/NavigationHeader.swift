@@ -5,8 +5,6 @@
 
 import SwiftUI
 
-/// Шапка внутренних экранов: стрелка назад слева, заголовок по центру,
-/// необязательное действие справа. Системный навбар скрыт — так совпадает с макетом.
 struct NavigationHeader<Trailing: View>: View {
     let title: Text?
     let onBack: () -> Void
@@ -22,7 +20,6 @@ struct NavigationHeader<Trailing: View>: View {
         self.trailing = trailing
     }
     
-    /// Заголовок-данные (например, название шаблона из API).
     init(
         title: Text?,
         onBack: @escaping () -> Void,

@@ -50,7 +50,6 @@ struct RootView: View {
     }
 }
 
-/// Временный экран для разделов, которые ещё не готовы.
 private struct UnderConstructionView: View {
     @EnvironmentObject private var router: AppRouter
     

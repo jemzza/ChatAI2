@@ -8,9 +8,7 @@ import Foundation
 @MainActor
 final class AppContainer {
     enum Environment: Sendable, Equatable {
-        /// Обычный запуск: реальная БД, сеть, мониторинг соединения.
         case live
-        /// Приложение запущено как хост для unit-тестов: ничего не поднимаем,
         case unitTests
     }
     

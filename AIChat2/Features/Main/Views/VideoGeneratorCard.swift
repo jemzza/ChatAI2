@@ -5,7 +5,6 @@
 
 import SwiftUI
 
-/// Карточка «Turn Photo into Video» — вход в генератор видео.
 struct VideoGeneratorCard: View {
     let action: () -> Void
     

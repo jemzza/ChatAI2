@@ -6,7 +6,6 @@
 import Combine
 import Foundation
 
-/// PRO-кнопка видна только без подписки и пропадает сразу после покупки.
 final class MainViewModel: ObservableObject {
     @Published private(set) var isPremium: Bool
     

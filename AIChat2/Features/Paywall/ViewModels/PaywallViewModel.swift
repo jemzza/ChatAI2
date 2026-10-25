@@ -102,7 +102,6 @@ final class PaywallViewModel: ObservableObject {
         return plans.map { plan in
             var savings: Int?
             if let maxWeekly, maxWeekly > 0, let weekly = plan.weeklyPrice, weekly < maxWeekly {
-                // `NSDecimalNumber.intValue` ошибается на длинных дробях — сначала округляем.
                 var exact = (maxWeekly - weekly) / maxWeekly * 100
                 var rounded = Decimal()
                 NSDecimalRound(&rounded, &exact, 0, .plain)

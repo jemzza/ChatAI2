@@ -5,7 +5,6 @@
 
 import Foundation
 
-
 enum APIErrorMapper {
 
     static func error(statusCode: Int, headers: [AnyHashable: Any]) -> APIError? {

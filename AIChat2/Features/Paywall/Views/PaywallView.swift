@@ -52,7 +52,6 @@ struct PaywallView: View {
         }
     }
     
-    // MARK: Контент
     
     private var content: some View {
         VStack(spacing: 24) {
@@ -137,7 +136,6 @@ struct PaywallView: View {
             .font(AppFont.systemCaption)
             .foregroundStyle(Color.appTextSecondary)
             .padding(.vertical, 8)
-            // Не нажимается (заметка к макету).
             .accessibilityElement(children: .combine)
             
             GradientButton(title: "Unlock now", isEnabled: model.state == .loaded && model.selectedPlanID != nil,
@@ -200,7 +198,6 @@ struct PaywallView: View {
         }
     }
         
-    /// Ошибка покупки/восстановления — отклик ошибки; ожидание подтверждения — без отклика.
     private nonisolated static func haptic(for alert: AlertPurchase?) -> Haptics.Kind? {
         switch alert {
             case .purchaseFailed, .restoreFailed, .nothingToRestore: .error
@@ -226,7 +223,6 @@ struct PaywallView: View {
         }
     }
 }
-
 
 #Preview("Loaded") {
     PaywallView(subscription: FakeSubscriptionService()) {}

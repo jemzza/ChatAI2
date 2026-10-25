@@ -5,7 +5,6 @@
 
 import SwiftUI
 
-/// Круглая кнопка 40pt на подложке 8% белого (история, настройки, меню чата).
 struct CircleIconButton<Icon: View>: View {
     let label: LocalizedStringKey
     let action: () -> Void

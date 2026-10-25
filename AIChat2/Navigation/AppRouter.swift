@@ -7,7 +7,6 @@ import Foundation
 import Combine
 
 enum AppRoute: Hashable {
-    /// `nil` — новый чат.
     case chat(chatId: UUID?)
     case templates
     case history(HistoryTab)
@@ -19,12 +18,10 @@ enum HistoryTab: Hashable, CaseIterable {
     case video
 }
 
-/// Откуда открыли пейвол — для аналитики и поведения после закрытия.
 enum PaywallSource: Hashable {
     case onboarding
     case proButton
     case settings
-    /// Попытка премиум-действия (отправка в чате, «Create» видео).
     case premiumAction
 }
 
@@ -51,7 +48,6 @@ final class AppRouter: ObservableObject {
         stage = settings.hasCompletedOnboarding ? .main : .onboarding
     }
     
-    /// Конец онбординга: дальше — главный экран, поверх него пейвол (заметки к макету).
     func finishOnboarding() {
         settings.hasCompletedOnboarding = true
         stage = .main
@@ -70,7 +66,6 @@ final class AppRouter: ObservableObject {
         path.removeAll()
     }
     
-    /// Заменяет верхний экран
     func replaceTop(with route: AppRoute) {
         if !path.isEmpty { path.removeLast() }
         path.append(route)
@@ -85,7 +80,6 @@ final class AppRouter: ObservableObject {
         paywall = nil
     }
     
-    /// Премиум-действие: есть подписка — `true`; нет — открывает пейвол и возвращает `false`.
     func requirePremium(_ subscription: any SubscribableService) -> Bool {
         if subscription.isPremium { return true }
         showPaywall(from: .premiumAction)

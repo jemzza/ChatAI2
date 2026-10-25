@@ -5,23 +5,11 @@
 
 import Foundation
 
-/// DEBUG-хуки из launch-аргументов. Без аргументов (и всегда в Release) — `.none`:
-/// `AppContainer` собирает только реальные реализации.
-///
-/// - `-mockData` — чаты в памяти с `PreviewData`, каталог и генерация видео — фейк;
-/// - `-mockOffline` — сеть всегда «нет»;
-/// - `-mockError 429|401|402|403|500|offline` — сеть отвечает этой ошибкой;
-/// - `-mockSlowReply` — фейковый AI отвечает через несколько секунд;
-/// - `-mockPremium` / `-mockFree` — подписка-фейк с активной подпиской / без неё;
-/// - `-componentGallery` — вместо приложения экран со всеми общими компонентами;
-/// - `-resetOnboarding` — показать онбординг, как при первом запуске;
-/// - `-skipOnboarding` — сразу главный экран (UI-тесты экранов).
 struct LaunchOptions: Hashable, Sendable {
     var useMockData = false
     var forceOffline = false
     var mockError: ErrorKind?
     var slowReply = false
-    /// `nil` — настоящий Apphud.
     var mockPremium: Bool?
     var showComponentGallery = false
     var resetOnboarding = false

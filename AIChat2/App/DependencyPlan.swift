@@ -12,9 +12,7 @@ struct DependencyPlan: Hashable, Sendable {
     }
     
     enum Subscription: Hashable, Sendable {
-        /// Apphud.
         case apphud
-        /// `-mockPremium` / `-mockFree`: фейк с заданным статусом.
         case fake(isPremium: Bool)
     }
     

@@ -5,8 +5,6 @@
 
 import SwiftUI
 
-/// Главный экран: история, PRO, настройки, поле «Ask anything…» (открывает новый чат)
-/// и карточка генератора видео.
 struct MainView: View {
     @StateObject private var model: MainViewModel
     @EnvironmentObject private var router: AppRouter
@@ -37,7 +35,6 @@ struct MainView: View {
                     .padding(.horizontal, AppMetrics.sideInset)
                     .padding(.vertical, 24)
                     .frame(maxWidth: .infinity)
-                    // Блок по центру свободной высоты; на маленьких экранах — прокрутка.
                     .frame(minHeight: proxy.size.height)
                 }
                 .scrollBounceBehaviorIfAvailable()
@@ -103,7 +100,6 @@ struct MainView: View {
     }
 }
 
-/// Иконка «история» из макета: круг и стрелки часов отдельными слоями.
 private struct HistoryIcon: View {
     var body: some View {
         ZStack(alignment: .topLeading) {
