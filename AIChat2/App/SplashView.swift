@@ -1,8 +1,3 @@
-//
-//  SplashView.swift
-//  AIChat2
-//
-
 import SwiftUI
 
 struct SplashView: View {

@@ -1,8 +1,3 @@
-//
-//  OnboardingView.swift
-//  AIChat2
-//
-
 import SwiftUI
 
 struct OnboardingView: View {

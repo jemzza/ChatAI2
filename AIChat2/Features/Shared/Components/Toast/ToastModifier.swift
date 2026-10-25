@@ -1,8 +1,3 @@
-//
-//  ToastModifier.swift
-//  AIChat2
-//
-
 import SwiftUI
 
 struct ToastModifier: ViewModifier {

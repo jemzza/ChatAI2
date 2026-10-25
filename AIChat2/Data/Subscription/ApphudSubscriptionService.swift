@@ -1,8 +1,3 @@
-//
-//  ApphudSubscriptionService.swift
-//  AIChat2
-//
-
 import ApphudSDK
 import Foundation
 import StoreKit

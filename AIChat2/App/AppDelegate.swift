@@ -1,8 +1,3 @@
-//
-//  AppDelegate.swift
-//  AIChat2
-//
-
 import UIKit
 import UserNotifications
 

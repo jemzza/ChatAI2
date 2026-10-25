@@ -1,8 +1,3 @@
-//
-//  HTTPMethod.swift
-//  AIChat2
-//
-
 import Foundation
 
 nonisolated enum HTTPMethod: String, Sendable {

@@ -1,8 +1,3 @@
-//
-//  AIChat2App.swift
-//  AIChat2
-//
-
 import SwiftUI
 
 @main

@@ -1,8 +1,3 @@
-//
-//  DolaChatProvider.swift
-//  AIChat2
-//
-
 import Foundation
 
 nonisolated struct DolaChatProvider: ChatProvider {

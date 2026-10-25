@@ -1,8 +1,3 @@
-//
-//  PlanOption.swift
-//  AIChat2
-//
-
 import Foundation
 
 struct PlanOption: Identifiable, Equatable {

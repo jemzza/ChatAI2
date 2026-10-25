@@ -1,8 +1,3 @@
-//
-//  UserDefaultsSettingsStore.swift
-//  AIChat2
-//
-
 import Combine
 import Foundation
 

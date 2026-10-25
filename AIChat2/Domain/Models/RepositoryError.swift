@@ -1,8 +1,3 @@
-//
-//  RepositoryError.swift
-//  AIChat2
-//
-
 import Foundation
 
 nonisolated enum RepositoryError: Error, Hashable, Sendable {

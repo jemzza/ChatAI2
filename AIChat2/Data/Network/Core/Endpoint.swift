@@ -1,8 +1,3 @@
-//
-//  Endpoint.swift
-//  AIChat2
-//
-
 import Foundation
 
 nonisolated struct Endpoint: Sendable {

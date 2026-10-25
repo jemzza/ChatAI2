@@ -1,8 +1,3 @@
-//
-//  SubscriptionPlan.swift
-//  AIChat2
-//
-
 import Foundation
 
 struct SubscriptionPlan: Identifiable, Hashable, Sendable {

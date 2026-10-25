@@ -1,8 +1,3 @@
-//
-//  ChatService.swift
-//  AIChat2
-//
-
 import Foundation
 
 final class ChatService {

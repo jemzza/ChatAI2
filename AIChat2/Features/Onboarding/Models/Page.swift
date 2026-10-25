@@ -1,8 +1,3 @@
-//
-//  Page.swift
-//  AIChat2
-//
-
 import SwiftUI
 
 struct Page: Identifiable {

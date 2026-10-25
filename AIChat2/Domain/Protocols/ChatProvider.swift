@@ -1,8 +1,3 @@
-//
-//  ChatProvider.swift
-//  AIChat2
-//
-
 import Foundation
 
 nonisolated protocol ChatProvider: Sendable {

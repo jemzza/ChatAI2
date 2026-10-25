@@ -1,8 +1,3 @@
-//
-//  PurchaseAlert.swift
-//  AIChat2
-//
-
 import Foundation
 
 enum AlertPurchase: Identifiable, Equatable {

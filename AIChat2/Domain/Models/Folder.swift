@@ -1,8 +1,3 @@
-//
-//  Folder.swift
-//  AIChat2
-//
-
 import Foundation
 
 nonisolated struct Folder: Identifiable, Hashable, Sendable {

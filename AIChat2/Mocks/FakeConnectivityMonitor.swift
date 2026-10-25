@@ -1,8 +1,3 @@
-//
-//  FakeConnectivityMonitor.swift
-//  AIChat2
-//
-
 #if DEBUG
 import Foundation
 import os

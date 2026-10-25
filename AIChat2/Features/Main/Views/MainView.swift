@@ -1,8 +1,3 @@
-//
-//  MainView.swift
-//  AIChat2
-//
-
 import SwiftUI
 
 struct MainView: View {

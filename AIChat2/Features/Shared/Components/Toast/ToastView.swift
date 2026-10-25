@@ -1,8 +1,3 @@
-//
-//  ToastView.swift
-//  AIChat2
-//
-
 import SwiftUI
 
 struct ToastView: View {

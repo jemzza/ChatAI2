@@ -1,8 +1,3 @@
-//
-//  FakeChatProvider.swift
-//  AIChat2
-//
-
 #if DEBUG
 import Foundation
 import os

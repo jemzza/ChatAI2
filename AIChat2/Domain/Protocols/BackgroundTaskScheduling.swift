@@ -1,8 +1,3 @@
-//
-//  BackgroundTaskScheduling.swift
-//  AIChat2
-//
-
 import Foundation
 
 protocol BackgroundTaskScheduling: AnyObject {

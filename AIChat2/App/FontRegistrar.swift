@@ -1,8 +1,3 @@
-//
-//  FontRegistrar.swift
-//  AIChat2
-//
-
 import CoreText
 import Foundation
 

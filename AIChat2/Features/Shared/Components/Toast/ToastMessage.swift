@@ -1,8 +1,3 @@
-//
-//  ToastMessage.swift
-//  AIChat2
-//
-
 import SwiftUI
 
 struct ToastMessage: Equatable, Identifiable {

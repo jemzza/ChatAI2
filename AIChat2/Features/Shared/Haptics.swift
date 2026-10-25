@@ -1,8 +1,3 @@
-//
-//  Haptics.swift
-//  AIChat2
-//
-
 import SwiftUI
 import UIKit
 

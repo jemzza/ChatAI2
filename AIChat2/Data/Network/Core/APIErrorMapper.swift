@@ -1,8 +1,3 @@
-//
-//  APIErrorMapper.swift
-//  AIChat2
-//
-
 import Foundation
 
 nonisolated enum APIErrorMapper {

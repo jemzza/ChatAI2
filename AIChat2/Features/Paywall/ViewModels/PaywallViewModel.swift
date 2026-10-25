@@ -1,8 +1,3 @@
-//
-//  PaywallViewModel.swift
-//  AIChat2
-//
-
 import Foundation
 import Combine
 

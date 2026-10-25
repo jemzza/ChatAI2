@@ -1,8 +1,3 @@
-//
-//  Chat.swift
-//  AIChat2
-//
-
 import Foundation
 
 nonisolated struct Chat: Identifiable, Hashable, Sendable {

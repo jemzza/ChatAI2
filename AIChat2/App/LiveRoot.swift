@@ -1,8 +1,3 @@
-//
-//  LiveRoot.swift
-//  AIChat2
-//
-
 import SwiftUI
 
 struct LiveRoot: View {

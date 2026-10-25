@@ -1,8 +1,3 @@
-//
-//  NavigationHeader.swift
-//  AIChat2
-//
-
 import SwiftUI
 
 struct NavigationHeader<Trailing: View>: View {

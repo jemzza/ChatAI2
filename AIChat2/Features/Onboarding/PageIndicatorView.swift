@@ -1,8 +1,3 @@
-//
-//  PageIndicatorView.swift
-//  AIChat2
-//
-
 import SwiftUI
 
 struct PageIndicatorView: View {

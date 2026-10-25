@@ -1,8 +1,3 @@
-//
-//  ErrorKind.swift
-//  AIChat2
-//
-
 import Foundation
 
 nonisolated enum ErrorKind: String, Hashable, Sendable {

@@ -1,8 +1,3 @@
-//
-//  ChatRecord.swift
-//  AIChat2
-//
-
 import Foundation
 import GRDB
 

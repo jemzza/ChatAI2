@@ -1,8 +1,3 @@
-//
-//  DependencyPlan.swift
-//  AIChat2
-//
-
 import Foundation
 
 struct DependencyPlan: Hashable, Sendable {

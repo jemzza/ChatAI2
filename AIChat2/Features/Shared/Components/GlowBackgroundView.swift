@@ -1,8 +1,3 @@
-//
-//  GlowBackgroundView.swift
-//  AIChat2
-//
-
 import SwiftUI
 
 struct GlowBackgroundView: View {

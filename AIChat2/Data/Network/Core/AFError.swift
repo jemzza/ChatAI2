@@ -1,8 +1,3 @@
-//
-//  AFError.swift
-//  AIChat2
-//
-
 import Foundation
 import Alamofire
 

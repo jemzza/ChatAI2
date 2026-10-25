@@ -1,8 +1,3 @@
-//
-//  AppContainer.swift
-//  AIChat2
-//
-
 import Alamofire
 import Foundation
 

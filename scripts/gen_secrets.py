@@ -50,13 +50,10 @@ for name, value in values.items():
         String(decoding: zip({name}Mixed, {name}Salt).map {{ $0 ^ $1 }}, as: UTF8.self)
     }}""")
 
-out = """// Сгенерировано scripts/gen_secrets.py — не редактировать вручную.
-// Ключи обфусцированы (XOR с солью), открытым текстом в репозитории их нет.
-
-enum Secrets {
+out = """enum Secrets {
 """ + "\n\n".join(blocks) + "\n}\n"
 
-path = Path(__file__).resolve().parent.parent / "AIChat/Data/Secrets/Secrets.generated.swift"
+path = Path(__file__).resolve().parent.parent / "AIChat2/Data/Secrets/Secrets.swift"
 path.parent.mkdir(parents=True, exist_ok=True)
 path.write_text(out, encoding="utf-8")
 print(f"OK: {path.relative_to(Path.cwd()) if path.is_relative_to(Path.cwd()) else path}")

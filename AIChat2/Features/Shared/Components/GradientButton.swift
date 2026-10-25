@@ -1,8 +1,3 @@
-//
-//  GradientButton.swift
-//  AIChat2
-//
-
 import SwiftUI
 
 struct GradientButton: View {

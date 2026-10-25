@@ -1,8 +1,3 @@
-//
-//  UIKitBackgroundTasks.swift
-//  AIChat2
-//
-
 import UIKit
 
 final class UIKitBackgroundTasks: BackgroundTaskScheduling {

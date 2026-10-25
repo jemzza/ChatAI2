@@ -1,8 +1,3 @@
-//
-//  JSONDecoder+Extensions.swift
-//  AIChat2
-//
-
 import Foundation
 
 nonisolated extension JSONDecoder {

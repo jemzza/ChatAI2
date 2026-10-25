@@ -1,8 +1,3 @@
-//
-//  View+Extensions.swift
-//  AIChat2
-//
-
 import SwiftUI
 
 extension View {

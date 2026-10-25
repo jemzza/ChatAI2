@@ -1,8 +1,3 @@
-//
-//  PlanCardView.swift
-//  AIChat2
-//
-
 import SwiftUI
 
 struct PlanCardView: View {

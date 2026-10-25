@@ -1,8 +1,3 @@
-//
-//  CircleIconButton.swift
-//  AIChat2
-//
-
 import SwiftUI
 
 struct CircleIconButton<Icon: View>: View {

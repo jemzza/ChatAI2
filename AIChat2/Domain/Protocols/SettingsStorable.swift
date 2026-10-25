@@ -1,8 +1,3 @@
-//
-//  SettingsStorable.swift
-//  AIChat2
-//
-
 import Foundation
 
 @MainActor

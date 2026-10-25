@@ -31,7 +31,7 @@ secrets.json
 *.mobileprovision
 # Файл с ОБФУСЦИРОВАННЫМИ ключами коммитим:
 # без него проект не соберётся сразу после клонирования.
-!AIChat2/AIChat2/Data/Secrets/Secrets.swift
+!AIChat2/Data/Secrets/Secrets.swift
 
 # Python
 __pycache__/

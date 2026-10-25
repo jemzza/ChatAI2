@@ -1,8 +1,3 @@
-//
-//  Message.swift
-//  AIChat2
-//
-
 import Foundation
 
 nonisolated enum MessageRole: String, Hashable, Sendable {

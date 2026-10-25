@@ -1,8 +1,3 @@
-//
-//  MultipartBody.swift
-//  AIChat2
-//
-
 import Foundation
 
 nonisolated struct MultipartBody: Sendable {

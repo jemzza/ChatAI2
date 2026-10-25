@@ -1,8 +1,3 @@
-//
-//  APIError.swift
-//  AIChat2
-//
-
 import Foundation
 
 nonisolated struct APIError: Error, Hashable, Sendable {

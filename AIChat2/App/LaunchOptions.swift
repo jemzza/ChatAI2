@@ -1,8 +1,3 @@
-//
-//  LaunchOptions.swift
-//  AIChat2
-//
-
 import Foundation
 
 struct LaunchOptions: Hashable, Sendable {

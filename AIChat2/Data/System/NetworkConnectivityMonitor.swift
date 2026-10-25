@@ -1,8 +1,3 @@
-//
-//  NetworkConnectivityMonitor.swift
-//  AIChat2
-//
-
 import Foundation
 import Network
 import os

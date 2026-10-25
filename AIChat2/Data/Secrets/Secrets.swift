@@ -1,8 +1,3 @@
-//
-//  Secrets.swift
-//  AIChat2
-//
-
 import Foundation
 
 enum Secrets {

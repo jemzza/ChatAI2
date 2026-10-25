@@ -1,8 +1,3 @@
-//
-//  SubscrubableService.swift
-//  AIChat2
-//
-
 @MainActor
 protocol SubscribableService: AnyObject, Sendable {
     

@@ -1,8 +1,3 @@
-//
-//  Theme.swift
-//  AIChat2
-//
-
 import SwiftUI
 
 extension ShapeStyle where Self == Color {

@@ -1,8 +1,3 @@
-//
-//  PaywallView.swift
-//  AIChat2
-//
-
 import SwiftUI
 
 struct PaywallView: View {

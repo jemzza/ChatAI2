@@ -1,8 +1,3 @@
-//
-//  PressableButtonStyle.swift
-//  AIChat2
-//
-
 import SwiftUI
 
 struct PressableButtonStyle: ButtonStyle {
