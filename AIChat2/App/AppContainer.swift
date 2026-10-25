@@ -64,6 +64,8 @@ extension AppContainer {
             videoAPI: videoAPI,
             media: media,
             video: video,
+            photoAccess: SystemPhotoLibraryAccess(),
+            photoSaver: SystemPhotoSaver(),
             thumbnails: makeThumbnails(plan.storage)
         )
     }

@@ -5,6 +5,7 @@ enum AppRoute: Hashable {
     case chat(chatId: UUID?)
     case templates
     case templatePreview(templateId: Int64, category: String?)
+    case generation(id: UUID)
     case history(HistoryTab)
     case settings
 }

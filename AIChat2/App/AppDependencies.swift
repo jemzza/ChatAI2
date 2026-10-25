@@ -9,5 +9,7 @@ struct AppDependencies {
     let videoAPI: any VideoAPI
     let media: any MediaStoring
     let video: VideoGenerationService
+    let photoAccess: any PhotoLibraryAccess
+    let photoSaver: any PhotoSaving
     let thumbnails: any VideoThumbnailing
 }

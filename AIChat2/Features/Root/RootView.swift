@@ -43,7 +43,11 @@ struct RootView: View {
                 ChatView(chatId: chatId, dependencies: dependencies)
             case .templates:
                 TemplatesView(dependencies: dependencies)
-            case .templatePreview, .history, .settings:
+            case let .templatePreview(templateId, category):
+                TemplatePreviewView(templateId: templateId, category: category, dependencies: dependencies)
+            case let .generation(id):
+                GenerationView(id: id, dependencies: dependencies)
+            case .history, .settings:
                 UnderConstructionView()
         }
     }
