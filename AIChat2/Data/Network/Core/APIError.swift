@@ -5,7 +5,7 @@
 
 import Foundation
 
-struct APIError: Error, Hashable, Sendable {
+nonisolated struct APIError: Error, Hashable, Sendable {
     
     let kind: ErrorKind
     let retryAfter: Duration?

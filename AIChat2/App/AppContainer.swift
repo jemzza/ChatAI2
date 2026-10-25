@@ -38,8 +38,11 @@ extension AppContainer {
     func makeDependencies() async throws -> AppDependencies {
         let plan = DependencyPlan(options: launchOptions)
         let subscription = makeSubscription(plan.subscription)
+        let database = try plan.storage == .previewData ? AppDatabase.inMemory() : AppDatabase.onDisk()
+        let chats = GRDBChatRepository(database: database)
+        try await chats.markGeneratingAsInterrupted()
         
-        return AppDependencies(subscription: subscription)
+        return AppDependencies(subscription: subscription, chats: chats)
     }
     
     private func makeSubscription(_ subscription: DependencyPlan.Subscription) -> any SubscribableService {

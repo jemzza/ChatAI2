@@ -16,13 +16,16 @@ struct DependencyPlan: Hashable, Sendable {
         case fake(isPremium: Bool)
     }
     
+    let storage: Storage
     let subscription: Subscription
     
-    init(subscription: Subscription = .apphud) {
+    init(storage: Storage = .disk, subscription: Subscription = .apphud) {
+        self.storage = storage
         self.subscription = subscription
     }
     
     init(options: LaunchOptions) {
+        storage = options.useMockData ? .previewData : .disk
         subscription = options.mockPremium.map { .fake(isPremium: $0) } ?? .apphud
     }
 }

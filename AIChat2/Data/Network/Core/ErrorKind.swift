@@ -5,7 +5,7 @@
 
 import Foundation
 
-enum ErrorKind: String, Hashable, Sendable {
+nonisolated enum ErrorKind: String, Hashable, Sendable {
     case offline
     case unauthorized
     case paymentRequired
@@ -18,7 +18,7 @@ enum ErrorKind: String, Hashable, Sendable {
     case unknown
 }
 
-struct MessageFailure: Hashable, Sendable {
+nonisolated struct MessageFailure: Hashable, Sendable {
     let kind: ErrorKind
     let retryAt: Date?
     
