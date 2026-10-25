@@ -41,7 +41,9 @@ struct RootView: View {
         switch route {
             case let .chat(chatId):
                 ChatView(chatId: chatId, dependencies: dependencies)
-            case .templates, .history, .settings:
+            case .templates:
+                TemplatesView(dependencies: dependencies)
+            case .templatePreview, .history, .settings:
                 UnderConstructionView()
         }
     }

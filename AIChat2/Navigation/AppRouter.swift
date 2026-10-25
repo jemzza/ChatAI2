@@ -4,6 +4,7 @@ import Combine
 enum AppRoute: Hashable {
     case chat(chatId: UUID?)
     case templates
+    case templatePreview(templateId: Int64, category: String?)
     case history(HistoryTab)
     case settings
 }

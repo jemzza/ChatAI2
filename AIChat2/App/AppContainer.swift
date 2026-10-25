@@ -44,7 +44,31 @@ extension AppContainer {
             backgroundTasks: UIKitBackgroundTasks()
         )
         
-        return AppDependencies(subscription: subscription, chats: chats, chat: chat)
+        return AppDependencies(
+            subscription: subscription,
+            chats: chats,
+            chat: chat,
+            videoAPI: makeVideoAPI(plan.storage, subscription: subscription),
+            thumbnails: makeThumbnails(plan.storage)
+        )
+    }
+    
+    private func makeVideoAPI(_ storage: DependencyPlan.Storage, subscription: any SubscribableService) -> any VideoAPI {
+#if DEBUG
+        if storage == .previewData { return FakeVideoAPI() }
+#endif
+        return PixverseClient(
+            client: networkClient(service: "pixverse", subscription: subscription),
+            appID: Self.apiAppID,
+            catalogCacheURL: Self.cachesDirectory.appendingPathComponent("templates.json")
+        )
+    }
+    
+    private func makeThumbnails(_ storage: DependencyPlan.Storage) -> any VideoThumbnailing {
+#if DEBUG
+        if storage == .previewData { return FakeVideoThumbnails() }
+#endif
+        return VideoThumbnailService.standard()
     }
     
     private func makeChatProvider(_ model: DependencyPlan.Model, subscription: any SubscribableService) -> any ChatProvider {
@@ -93,6 +117,8 @@ extension AppContainer {
     }
     
     private static let apiAppID = "com.test.test"
+    private static let cachesDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first
+        ?? FileManager.default.temporaryDirectory
     private static let apiBaseURL = URL(string: "https://nebulaapps.site")!
     
     private func makeSubscription(_ subscription: DependencyPlan.Subscription) -> any SubscribableService {
