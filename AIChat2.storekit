@@ -1,83 +1,112 @@
 {
-  "identifier" : "4F6B0C2A",
-  "nonRenewingSubscriptions" : [
-
-  ],
-  "products" : [
-
-  ],
-  "settings" : {
-
+  "identifier": "4F6B0C2A",
+  "nonRenewingSubscriptions": [],
+  "products": [],
+  "settings": {
+    "_failTransactionsEnabled": false,
+    "_locale": "en_US",
+    "_storefront": "USA",
+    "_storeKitErrors": [
+      {
+        "current": null,
+        "enabled": false,
+        "name": "Load Products"
+      },
+      {
+        "current": null,
+        "enabled": false,
+        "name": "Purchase"
+      },
+      {
+        "current": null,
+        "enabled": false,
+        "name": "Verification"
+      },
+      {
+        "current": null,
+        "enabled": false,
+        "name": "App Store Sync"
+      },
+      {
+        "current": null,
+        "enabled": false,
+        "name": "Subscription Status"
+      },
+      {
+        "current": null,
+        "enabled": false,
+        "name": "App Transaction"
+      },
+      {
+        "current": null,
+        "enabled": false,
+        "name": "Manage Subscriptions Sheet"
+      },
+      {
+        "current": null,
+        "enabled": false,
+        "name": "Refund Request Sheet"
+      },
+      {
+        "current": null,
+        "enabled": false,
+        "name": "Offer Code Redeem Sheet"
+      }
+    ]
   },
-  "subscriptionGroups" : [
+  "subscriptionGroups": [
     {
-      "id" : "21534001",
-      "localizations" : [
-
-      ],
-      "name" : "Premium",
-      "subscriptions" : [
+      "id": "21534001",
+      "localizations": [],
+      "name": "Premium",
+      "subscriptions": [
         {
-          "adHocOffers" : [
-
-          ],
-          "codeOffers" : [
-
-          ],
-          "displayPrice" : "4.99",
-          "familyShareable" : false,
-          "groupNumber" : 2,
-          "internalID" : "6745000001",
-          "introductoryOffer" : null,
-          "localizations" : [
+          "adHocOffers": [],
+          "codeOffers": [],
+          "displayPrice": "4.99",
+          "familyShareable": false,
+          "groupNumber": 2,
+          "internalID": "6745000001",
+          "introductoryOffer": null,
+          "localizations": [
             {
-              "description" : "Weekly access to AI chat and video templates",
-              "displayName" : "Week",
-              "locale" : "en_US"
+              "description": "Weekly access to AI chat and video templates",
+              "displayName": "Week",
+              "locale": "en_US"
             }
           ],
-          "productID" : "week_4.99_nottrial",
-          "recurringSubscriptionPeriod" : "P1W",
-          "referenceName" : "Week",
-          "subscriptionGroupID" : "21534001",
-          "type" : "RecurringSubscription",
-          "winbackOffers" : [
-
-          ]
+          "productID": "week_4.99_nottrial",
+          "recurringSubscriptionPeriod": "P1W",
+          "referenceName": "Week",
+          "subscriptionGroupID": "21534001",
+          "type": "RecurringSubscription"
         },
         {
-          "adHocOffers" : [
-
-          ],
-          "codeOffers" : [
-
-          ],
-          "displayPrice" : "39.99",
-          "familyShareable" : false,
-          "groupNumber" : 1,
-          "internalID" : "6745000002",
-          "introductoryOffer" : null,
-          "localizations" : [
+          "adHocOffers": [],
+          "codeOffers": [],
+          "displayPrice": "39.99",
+          "familyShareable": false,
+          "groupNumber": 1,
+          "internalID": "6745000002",
+          "introductoryOffer": null,
+          "localizations": [
             {
-              "description" : "Yearly access to AI chat and video templates",
-              "displayName" : "Year",
-              "locale" : "en_US"
+              "description": "Yearly access to AI chat and video templates",
+              "displayName": "Year",
+              "locale": "en_US"
             }
           ],
-          "productID" : "year_39.99_nottrial",
-          "recurringSubscriptionPeriod" : "P1Y",
-          "referenceName" : "Year",
-          "subscriptionGroupID" : "21534001",
-          "type" : "RecurringSubscription",
-          "winbackOffers" : [
-
-          ]
+          "productID": "year_39.99_nottrial",
+          "recurringSubscriptionPeriod": "P1Y",
+          "referenceName": "Year",
+          "subscriptionGroupID": "21534001",
+          "type": "RecurringSubscription"
         }
       ]
     }
   ],
-  "version" : {
-    "major" : 4,
-    "minor" : 0
+  "version": {
+    "major": 3,
+    "minor": 0
   }
 }
