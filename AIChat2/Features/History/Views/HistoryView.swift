@@ -3,6 +3,9 @@ import SwiftUI
 struct HistoryView: View {
     @StateObject private var model: HistoryViewModel
     @EnvironmentObject private var router: AppRouter
+    @Environment(\.scenePhase) private var scenePhase
+    @StateObject private var playback = PreviewPlaybackController()
+    @State private var isOnScreen = false
     private let thumbnails: any VideoThumbnailing
     private let media: any MediaStoring
     
@@ -46,6 +49,25 @@ struct HistoryView: View {
         }
         .background(Color.appBackground.ignoresSafeArea())
         .task { await model.observe() }
+        .onAppear {
+            isOnScreen = true
+            playback.url = { [model, media] id in
+                guard let id = id.base as? UUID,
+                      let generation = model.videos.first(where: { $0.id == id }),
+                      generation.status == .succeeded
+                else { return nil }
+                return generation.localVideoName.flatMap(media.localVideoURL(named:)) ?? generation.videoURL
+            }
+            playback.isActive = isPlaybackActive
+        }
+        .onDisappear {
+            isOnScreen = false
+            playback.stop()
+        }
+        .onChange(of: isPlaybackActive) { isActive in
+            playback.isActive = isActive
+            if !isActive { playback.stop() }
+        }
         .alert("Rename chat", isPresented: isPresented($renaming)) {
             TextField("Chat name", text: $newTitle)
             Button("Cancel", role: .cancel) {}
@@ -261,11 +283,17 @@ struct HistoryView: View {
             GeometryReader { proxy in
                 ScrollView {
                     MasonryGrid(items: model.videos, width: proxy.size.width - AppMetrics.sideInset * 2, spacing: 8) { generation in
-                        VideoHistoryCard(generation: generation, thumbnails: thumbnails, media: media) {
+                        VideoHistoryCard(
+                            generation: generation,
+                            thumbnails: thumbnails,
+                            media: media,
+                            player: playback.player(for: generation.id)
+                        ) {
                             router.push(.generation(id: generation.id))
                         } onRetry: {
                             Task { await model.retry(generation.id) }
                         }
+                        .previewFrame(id: generation.id)
                     } height: { generation, width in
                         width / generation.aspect.ratio
                     }
@@ -274,8 +302,13 @@ struct HistoryView: View {
                     .padding(.bottom, 16)
                     .animation(.easeInOut(duration: 0.25), value: model.videos)
                 }
+                .previewPlayback(playback)
             }
         }
+    }
+    
+    private var isPlaybackActive: Bool {
+        isOnScreen && scenePhase == .active && model.tab == .video
     }
     
     private func isPresented<Item>(_ item: Binding<Item?>) -> Binding<Bool> {

@@ -1,3 +1,4 @@
+import AVFoundation
 import SwiftUI
 import UIKit
 
@@ -39,6 +40,7 @@ struct VideoHistoryCard: View {
     let generation: VideoGeneration
     let thumbnails: any VideoThumbnailing
     let media: any MediaStoring
+    var player: AVPlayer?
     let onOpen: () -> Void
     let onRetry: () -> Void
     
@@ -60,6 +62,7 @@ struct VideoHistoryCard: View {
         switch generation.status {
             case .succeeded:
                 VideoThumbnailView(url: resultURL, thumbnails: thumbnails)
+                    .overlay { PreviewVideoLayer(player: player) }
             case .creating, .generating, .failed:
                 LocalImageView(url: media.sourceImageURL(named: generation.sourceImageName))
                     .blur(radius: 6)
