@@ -6,6 +6,7 @@ struct GenerationView: View {
     @StateObject private var model: GenerationViewModel
     @EnvironmentObject private var router: AppRouter
     @State private var isPickerPresented = false
+    @State private var isPhotoAccessDenied = false
     @State private var pickerItem: PhotosPickerItem?
     private let photoAccess: any PhotoLibraryAccess
     
@@ -54,6 +55,7 @@ struct GenerationView: View {
             model.onReplaced = { [router] id in router.replaceTop(with: .generation(id: id)) }
         }
         .photosPicker(isPresented: $isPickerPresented, selection: $pickerItem, matching: .images)
+        .photoAccessAlert(isPresented: $isPhotoAccessDenied)
         .onChange(of: pickerItem) { item in
             guard let item else { return }
             pickerItem = nil
@@ -137,7 +139,11 @@ struct GenerationView: View {
     
     private func replace() {
         Task {
-            if await photoAccess.requestAccess() { isPickerPresented = true }
+            if await photoAccess.requestAccess() {
+                isPickerPresented = true
+            } else {
+                isPhotoAccessDenied = true
+            }
         }
     }
 }

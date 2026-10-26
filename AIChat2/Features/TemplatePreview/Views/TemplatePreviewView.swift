@@ -11,6 +11,7 @@ struct TemplatePreviewView: View {
     @EnvironmentObject private var router: AppRouter
     @State private var dropdown: Dropdown?
     @State private var isPickerPresented = false
+    @State private var isPhotoAccessDenied = false
     @State private var pickerItem: PhotosPickerItem?
     private let thumbnails: any VideoThumbnailing
     private let photoAccess: any PhotoLibraryAccess
@@ -81,6 +82,7 @@ struct TemplatePreviewView: View {
         .toast($model.toast)
         .haptic(on: model.toast, ToastMessage.haptic(for:))
         .photosPicker(isPresented: $isPickerPresented, selection: $pickerItem, matching: .images)
+        .photoAccessAlert(isPresented: $isPhotoAccessDenied)
         .onChange(of: pickerItem) { item in
             guard let item else { return }
             pickerItem = nil
@@ -95,7 +97,11 @@ struct TemplatePreviewView: View {
     
     private func addPhoto() {
         Task {
-            if await photoAccess.requestAccess() { isPickerPresented = true }
+            if await photoAccess.requestAccess() {
+                isPickerPresented = true
+            } else {
+                isPhotoAccessDenied = true
+            }
         }
     }
     
