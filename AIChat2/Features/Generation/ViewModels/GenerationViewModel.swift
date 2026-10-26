@@ -15,7 +15,7 @@ final class GenerationViewModel: ObservableObject {
         case failed
     }
     
-    typealias Replace = (VideoGeneration, Data) async throws -> UUID
+    typealias Regenerate = (VideoGeneration, Data) async throws -> UUID
     
     @Published private(set) var generation: VideoGeneration?
     @Published private(set) var phase = Phase.loading
@@ -25,14 +25,14 @@ final class GenerationViewModel: ObservableObject {
     @Published var shareURL: URL?
     @Published var toast: ToastMessage?
     
-    var onReplaced: (UUID) -> Void = { _ in }
+    var onRegenerated: (UUID) -> Void = { _ in }
     
     let id: UUID
     private let repository: any VideoRepository
     private let media: any MediaStoring
     private let photoSaver: any PhotoSaving
     private let service: VideoGenerationService
-    private let replace: Replace
+    private let regenerate: Regenerate
     
     init(
         id: UUID,
@@ -40,14 +40,14 @@ final class GenerationViewModel: ObservableObject {
         media: any MediaStoring,
         photoSaver: any PhotoSaving,
         service: VideoGenerationService,
-        replace: @escaping Replace
+        regenerate: @escaping Regenerate
     ) {
         self.id = id
         self.repository = repository
         self.media = media
         self.photoSaver = photoSaver
         self.service = service
-        self.replace = replace
+        self.regenerate = regenerate
     }
     
     var aspect: VideoAspect { generation?.aspect ?? .portrait }
@@ -111,12 +111,13 @@ final class GenerationViewModel: ObservableObject {
         }
     }
     
-    func replacePhoto(_ data: Data) async {
+    func regenerate() async {
         guard let generation else { return }
         do {
-            onReplaced(try await replace(generation, data))
+            guard let photo = media.sourceImage(named: generation.sourceImageName) else { throw CocoaError(.fileNoSuchFile) }
+            onRegenerated(try await regenerate(generation, photo))
         } catch {
-            toast = ToastMessage(kind: .failure, text: "Upload failed")
+            toast = ToastMessage(kind: .failure, text: "Couldn't start generation")
         }
     }
     

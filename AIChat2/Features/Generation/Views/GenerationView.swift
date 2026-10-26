@@ -1,17 +1,13 @@
-import PhotosUI
 import SwiftUI
 import UIKit
 
 struct GenerationView: View {
     @StateObject private var model: GenerationViewModel
     @EnvironmentObject private var router: AppRouter
-    @State private var isPickerPresented = false
-    @State private var isPhotoAccessDenied = false
-    @State private var pickerItem: PhotosPickerItem?
-    private let photoAccess: any PhotoLibraryAccess
+    private let subscription: any SubscribableService
     
     init(id: UUID, dependencies: AppDependencies) {
-        photoAccess = dependencies.photoAccess
+        subscription = dependencies.subscription
         let video = dependencies.video
         _model = StateObject(wrappedValue: GenerationViewModel(
             id: id,
@@ -52,20 +48,7 @@ struct GenerationView: View {
         .haptic(on: model.isResult) { $0 ? .success : nil }
         .task { await model.observe() }
         .onAppear {
-            model.onReplaced = { [router] id in router.replaceTop(with: .generation(id: id)) }
-        }
-        .photosPicker(isPresented: $isPickerPresented, selection: $pickerItem, matching: .images)
-        .photoAccessAlert(isPresented: $isPhotoAccessDenied)
-        .onChange(of: pickerItem) { item in
-            guard let item else { return }
-            pickerItem = nil
-            Task {
-                guard let data = try? await item.loadTransferable(type: Data.self) else {
-                    model.toast = ToastMessage(kind: .failure, text: "Upload failed")
-                    return
-                }
-                await model.replacePhoto(data)
-            }
+            model.onRegenerated = { [router] id in router.replaceTop(with: .generation(id: id)) }
         }
         .sheet(isPresented: Binding(get: { model.shareURL != nil }, set: { if !$0 { model.shareURL = nil } })) {
             if let url = model.shareURL {
@@ -99,7 +82,7 @@ struct GenerationView: View {
                 aspect: model.aspect,
                 isPlaying: model.isPlaying,
                 onTap: model.togglePlayback,
-                onReplace: replace
+                onReplace: regenerate
             )
             .overlay { saveCard }
             .frame(maxHeight: .infinity)
@@ -137,13 +120,9 @@ struct GenerationView: View {
         }
     }
     
-    private func replace() {
-        Task {
-            if await photoAccess.requestAccess() {
-                isPickerPresented = true
-            } else {
-                isPhotoAccessDenied = true
-            }
-        }
+    private func regenerate() {
+        guard router.requirePremium(subscription) else { return }
+        Haptics.play(.tap)
+        Task { await model.regenerate() }
     }
 }

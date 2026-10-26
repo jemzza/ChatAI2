@@ -91,6 +91,16 @@
         }
       }
     },
+    "Couldn't start generation" : {
+      "localizations" : {
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Не удалось запустить генерацию"
+          }
+        }
+      }
+    },
     "No access to Photos" : {
       "localizations" : {
         "ru" : {
