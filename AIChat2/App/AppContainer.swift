@@ -37,6 +37,9 @@ extension AppContainer {
         let database = try plan.storage == .previewData ? AppDatabase.inMemory() : AppDatabase.onDisk()
         let chats = GRDBChatRepository(database: database)
         try await chats.markGeneratingAsInterrupted()
+#if DEBUG
+        if plan.storage == .previewData { try await PreviewData.seed(chats) }
+#endif
         let connectivity = makeConnectivity(plan.network)
         let backgroundTasks = UIKitBackgroundTasks()
         let chat = ChatService(

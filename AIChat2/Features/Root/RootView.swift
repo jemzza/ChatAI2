@@ -47,7 +47,9 @@ struct RootView: View {
                 TemplatePreviewView(templateId: templateId, category: category, dependencies: dependencies)
             case let .generation(id):
                 GenerationView(id: id, dependencies: dependencies)
-            case .history, .settings:
+            case let .history(tab):
+                HistoryView(tab: tab, dependencies: dependencies)
+            case .settings:
                 UnderConstructionView()
         }
     }
