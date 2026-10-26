@@ -6,7 +6,7 @@ An iOS application with an AI chat and a video generator. The app contains onboa
 
 ## Preview
 
-[<img src="Preview%20Video/poster.jpg" width="250" alt="App preview">](Preview%20Video/iPhone.mp4)
+<video src="https://github.com/jemzza/ChatAI2/raw/main/Preview%20Video/iPhone.mp4" width="300" controls muted></video>
 
 [Watch the video](Preview%20Video/iPhone.mp4)
 
