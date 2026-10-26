@@ -30,8 +30,10 @@ struct SettingsView: View {
                         .buttonStyle(PressableButtonStyle())
                     }
                     SettingsGroup(title: "Purchases & Actions") {
-                        SettingsRow(systemImage: "sparkles", title: "Upgrade plan") {
-                            router.showPaywall(from: .settings)
+                        if !model.isPremium {
+                            SettingsRow(systemImage: "sparkles", title: "Upgrade plan") {
+                                router.showPaywall(from: .settings)
+                            }
                         }
                         SettingsRow(systemImage: "bell", title: "Notifications", accessory: .toggle(notificationsBinding))
                         SettingsRow(
@@ -68,6 +70,7 @@ struct SettingsView: View {
         }
         .background(Color.appBackground.ignoresSafeArea())
         .task { await model.load() }
+        .task { await model.observeSubscription() }
         .alert(item: $model.alert) { alert in
             switch alert {
                 case .notificationsDenied:

@@ -14,6 +14,7 @@ final class SettingsViewModel: ObservableObject {
     @Published private(set) var notificationsEnabled: Bool
     @Published private(set) var cacheSize: Int64?
     @Published private(set) var isRestoring = false
+    @Published private(set) var isPremium: Bool
     @Published var alert: Alert?
     
     private let settings: any SettingsStorable
@@ -32,6 +33,7 @@ final class SettingsViewModel: ObservableObject {
         self.cache = cache
         self.subscription = subscription
         notificationsEnabled = settings.notifyOnReply
+        isPremium = subscription.isPremium
     }
     
     static var appVersion: String {
@@ -42,6 +44,12 @@ final class SettingsViewModel: ObservableObject {
         cacheSize = await cache.size()
         if notificationsEnabled, await scheduler.authorization() == .denied {
             setNotifications(false)
+        }
+    }
+    
+    func observeSubscription() async {
+        for await isPremium in subscription.premiumUpdates() {
+            self.isPremium = isPremium
         }
     }
     
