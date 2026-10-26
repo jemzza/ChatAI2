@@ -1,3 +1,4 @@
+import Lottie
 import SwiftUI
 import UIKit
 
@@ -22,24 +23,12 @@ struct GeneratingView: View {
 }
 
 private struct GeneratingRing: View {
-    @State private var isRotating = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     
     var body: some View {
-        Circle()
-            .trim(from: 0, to: 0.72)
-            .stroke(
-                AngularGradient(
-                    colors: [.appGradientEnd.opacity(0.05), .appGradientEnd.opacity(0.6), .appGradientEnd],
-                    center: .center,
-                    startAngle: .degrees(0),
-                    endAngle: .degrees(260)
-                ),
-                style: StrokeStyle(lineWidth: 36, lineCap: .round)
-            )
-            .padding(18)
-            .rotationEffect(.degrees(isRotating ? 360 : 0))
-            .animation(.linear(duration: 1.2).repeatForever(autoreverses: false), value: isRotating)
-            .onAppear { isRotating = true }
+        LottieView(animation: .named("GeneratingLoader"))
+            .playbackMode(reduceMotion ? .paused(at: .progress(0.5)) : .playing(.toProgress(1, loopMode: .loop)))
+            .resizable()
             .accessibilityHidden(true)
     }
 }
