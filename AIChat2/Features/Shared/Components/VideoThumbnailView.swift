@@ -24,6 +24,7 @@ struct VideoThumbnailView: View {
             .task(id: url) {
                 guard let url, image == nil else { return }
                 let data = await thumbnails.thumbnail(for: url, maxPixelSize: maxPixelSize)
+                guard !Task.isCancelled else { return }
                 let decoded = await Task.detached(priority: .userInitiated) {
                     data.flatMap { UIImage(data: $0)?.preparingForDisplay() }
                 }.value
