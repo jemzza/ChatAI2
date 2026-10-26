@@ -17,6 +17,7 @@ final class TemplatesViewModel: ObservableObject {
     @Published private(set) var categories: [Category] = []
     @Published var selectedCategory: Category?
     @Published private(set) var templates: [VideoTemplate] = []
+    private var templatesByCategory: [String: [VideoTemplate]] = [:]
     
     private let api: any VideoAPI
     private static let hiddenCategories: Set<String> = ["🧪 Test"]
@@ -25,15 +26,16 @@ final class TemplatesViewModel: ObservableObject {
         self.api = api
     }
     
-    var visibleTemplates: [VideoTemplate] {
-        guard let category = selectedCategory?.id else { return templates }
-        return templates.filter { $0.category == category }
+    func templates(in category: Category) -> [VideoTemplate] {
+        guard let id = category.id else { return templates }
+        return templatesByCategory[id] ?? []
     }
     
     func load() async {
         if templates.isEmpty { state = .loading }
         do {
             let all = try await api.templates().filter { !Self.hiddenCategories.contains($0.category) }
+            templatesByCategory = Dictionary(grouping: all, by: \.category)
             templates = all
             categories = Self.categories(from: all)
             if selectedCategory == nil || !categories.contains(where: { $0 == selectedCategory }) {

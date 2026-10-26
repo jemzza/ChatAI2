@@ -35,21 +35,19 @@ struct TemplatesView: View {
             case .loaded:
                 VStack(spacing: 24) {
                     categoriesRow
-                    ScrollView {
-                        LazyVGrid(columns: columns, spacing: 16) {
-                            ForEach(model.visibleTemplates) { template in
-                                TemplateCard(template: template, thumbnails: thumbnails) {
-                                    router.push(.templatePreview(
-                                        templateId: template.id,
-                                        category: model.selectedCategory?.id
-                                    ))
-                                }
+                    TabView(selection: $model.selectedCategory) {
+                        ForEach(model.categories) { category in
+                            TemplatesGrid(
+                                templates: model.templates(in: category),
+                                columns: columns,
+                                thumbnails: thumbnails
+                            ) { template in
+                                router.push(.templatePreview(templateId: template.id, category: category.id))
                             }
+                            .tag(Optional(category))
                         }
-                        .padding(.horizontal, AppMetrics.sideInset)
-                        .padding(.bottom, 16)
-                        .animation(.easeInOut(duration: 0.25), value: model.selectedCategory)
                     }
+                    .tabViewStyle(.page(indexDisplayMode: .never))
                 }
                 .padding(.top, 24)
         }
@@ -61,14 +59,28 @@ struct TemplatesView: View {
                 HStack(spacing: 12) {
                     ForEach(model.categories) { category in
                         ChipButton(title: category.title, isSelected: category == model.selectedCategory) {
-                            withAnimation(.easeInOut(duration: 0.2)) { model.selectedCategory = category }
-                            withAnimation { proxy.scrollTo(category.id, anchor: .center) }
+                            select(category)
                         }
                         .id(category.id)
                     }
                 }
                 .padding(.horizontal, AppMetrics.sideInset)
             }
+            .onChange(of: model.selectedCategory) { category in
+                withAnimation { proxy.scrollTo(category?.id, anchor: .center) }
+            }
+        }
+    }
+    
+    private func select(_ category: TemplatesViewModel.Category) {
+        let categories = model.categories
+        var isNeighbor = false
+        if let target = categories.firstIndex(of: category),
+           let current = model.selectedCategory.flatMap(categories.firstIndex(of:)) {
+            isNeighbor = abs(target - current) == 1
+        }
+        withAnimation(isNeighbor ? .easeInOut(duration: 0.3) : nil) {
+            model.selectedCategory = category
         }
     }
     
@@ -93,6 +105,25 @@ struct TemplatesView: View {
         }
         .padding(.horizontal, AppMetrics.sideInset)
         .frame(maxHeight: .infinity, alignment: .top)
+    }
+}
+
+private struct TemplatesGrid: View {
+    let templates: [VideoTemplate]
+    let columns: [GridItem]
+    let thumbnails: any VideoThumbnailing
+    let onSelect: (VideoTemplate) -> Void
+    
+    var body: some View {
+        ScrollView {
+            LazyVGrid(columns: columns, spacing: 16) {
+                ForEach(templates) { template in
+                    TemplateCard(template: template, thumbnails: thumbnails) { onSelect(template) }
+                }
+            }
+            .padding(.horizontal, AppMetrics.sideInset)
+            .padding(.bottom, 16)
+        }
     }
 }
 
