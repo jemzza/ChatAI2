@@ -75,7 +75,7 @@
          </BuildableReference>
       </BuildableProductRunnable>
       <StoreKitConfigurationFileReference
-         identifier = "../AIChat2.storekit">
+         identifier = "../../AIChat2/Resources/AIChat2.storekit">
       </StoreKitConfigurationFileReference>
    </LaunchAction>
    <ProfileAction
