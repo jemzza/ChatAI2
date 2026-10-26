@@ -137,11 +137,15 @@ struct HistoryView: View {
     @ViewBuilder
     private var chats: some View {
         if model.isChatsEmpty {
-            EmptyHistoryView(
-                icon: "IconMagicPencil",
-                title: "No chats yet",
-                subtitle: "Start a conversation to see\nyour history here"
-            )
+            VStack(spacing: 0) {
+                foldersHeader
+                    .padding(.top, 22)
+                EmptyHistoryView(
+                    icon: "IconMagicPencil",
+                    title: "No chats yet",
+                    subtitle: "Start a conversation to see\nyour history here"
+                )
+            }
         } else {
             List {
                 if !model.pinned.isEmpty {
@@ -195,25 +199,29 @@ struct HistoryView: View {
                 }
             }
         } header: {
-            HStack {
-                SectionTitle(text: Text("Folders"))
-                Spacer()
-                Button {
-                    chatForNewFolder = nil
-                    folderName = ""
-                    isCreatingFolder = true
-                } label: {
-                    Image(systemName: "plus")
-                        .font(.system(size: 17, weight: .semibold))
-                        .foregroundStyle(AppGradient.primary)
-                        .frame(width: 44, height: 44)
-                }
-                .accessibilityLabel(Text("New folder"))
-            }
-            .padding(.trailing, 4)
-            .listRowInsets(EdgeInsets())
-            .background(Color.appBackground)
+            foldersHeader
+                .listRowInsets(EdgeInsets())
+                .background(Color.appBackground)
         }
+    }
+    
+    private var foldersHeader: some View {
+        HStack {
+            SectionTitle(text: Text("Folders"))
+            Spacer()
+            Button {
+                chatForNewFolder = nil
+                folderName = ""
+                isCreatingFolder = true
+            } label: {
+                Image(systemName: "plus")
+                    .font(.system(size: 17, weight: .semibold))
+                    .foregroundStyle(AppGradient.primary)
+                    .frame(width: 44, height: 44)
+            }
+            .accessibilityLabel(Text("New folder"))
+        }
+        .padding(.trailing, 4)
     }
     
     private func chatSection(_ title: Text, chats: [ChatSummary]) -> some View {
