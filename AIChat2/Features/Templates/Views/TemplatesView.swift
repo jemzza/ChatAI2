@@ -87,7 +87,11 @@ struct TemplatesView: View {
     private var categoriesPlaceholder: some View {
         HStack(spacing: 12) {
             ForEach(0..<4, id: \.self) { _ in
-                Capsule().fill(Color.appSurface.opacity(0.6)).frame(width: 76, height: 33)
+                Capsule()
+                    .fill(Color.appSurface.opacity(0.6))
+                    .frame(width: 76, height: 33)
+                    .shimmer()
+                    .clipShape(Capsule())
             }
             Spacer()
         }
@@ -100,7 +104,8 @@ struct TemplatesView: View {
                 RoundedRectangle(cornerRadius: AppMetrics.cardRadius)
                     .fill(Color.appSurface)
                     .frame(height: 232)
-                    .overlay(ProgressView().tint(.appTextSecondary))
+                    .shimmer()
+                    .clipShape(RoundedRectangle(cornerRadius: AppMetrics.cardRadius))
             }
         }
         .padding(.horizontal, AppMetrics.sideInset)
