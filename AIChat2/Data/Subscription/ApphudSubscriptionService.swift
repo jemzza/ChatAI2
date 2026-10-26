@@ -5,17 +5,19 @@ import StoreKit
 @MainActor
 final class ApphudSubscriptionService: SubscribableService {
     static let paywallID = "main"
+    static let paywallProductIDs = ["week_4.99_nottrial", "year_39.99_nottrial"]
     
     private let premium: Broadcast<Bool>
     private var updatesTask: Task<Void, Never>?
     private var paywall: ApphudPaywall?
-    private var loadedPaywalls: [ApphudPaywall]?
-    private var paywallWaiters: [CheckedContinuation<[ApphudPaywall], Never>] = []
+    private var groupProducts: [Product.ID: Product] = [:]
     
     init(apiKey: String) {
+#if DEBUG
+        Apphud.enableDebugLogs()
+#endif
         Apphud.start(apiKey: apiKey)
         premium = Broadcast(Apphud.hasPremiumAccess())
-        Apphud.setDelegate(self)
         updatesTask = Task { [weak self] in
             for await _ in NotificationCenter.default.notifications(named: Apphud.didUpdateNotification()) {
                 self?.refresh()
@@ -33,23 +35,25 @@ final class ApphudSubscriptionService: SubscribableService {
     
     var userID: String { Apphud.userID() }
     
-    
     func paywallPlans() async throws(SubscriptionError) -> [SubscriptionPlan] {
         let placements = await Apphud.placements()
-        let fromPlacements = placements.lazy.compactMap(\.paywall).first { $0.identifier == Self.paywallID }
+        paywall = placements.lazy.compactMap(\.paywall).first { $0.identifier == Self.paywallID }
             ?? placements.first { $0.identifier == Self.paywallID }?.paywall
-        var paywall = fromPlacements
-        if paywall == nil { paywall = await paywallWithoutPlacement() }
-        guard let paywall else { throw .productsUnavailable }
-        self.paywall = paywall
         
-        var plans: [SubscriptionPlan] = []
-        for product in paywall.products {
-            guard let storeProduct = try? await product.product() else { continue }
-            plans.append(Self.plan(from: storeProduct))
+        groupProducts = [:]
+        let products: [Product]
+        if let paywall {
+            var loaded: [Product] = []
+            for product in paywall.products {
+                if let storeProduct = try? await product.product() { loaded.append(storeProduct) }
+            }
+            products = loaded
+        } else {
+            products = await productsFromPermissionGroups()
+            groupProducts = Dictionary(products.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
         }
-        guard !plans.isEmpty else { throw .productsUnavailable }
-        return plans
+        guard !products.isEmpty else { throw .productsUnavailable }
+        return products.map(Self.plan(from:))
     }
     
     func paywallShown() {
@@ -57,6 +61,9 @@ final class ApphudSubscriptionService: SubscribableService {
     }
     
     func purchase(planID: SubscriptionPlan.ID) async throws(SubscriptionError) -> PurchaseOutcome {
+        if let product = groupProducts[planID] {
+            return try await purchase(product)
+        }
         guard let product = paywall?.products.first(where: { $0.productId == planID }) else {
             throw .purchaseFailed
         }
@@ -75,14 +82,20 @@ final class ApphudSubscriptionService: SubscribableService {
         return isPremium
     }
     
-    private func paywallWithoutPlacement() async -> ApphudPaywall? {
-        let paywalls = await loadedPaywallsWhenReady()
-        return paywalls.first { $0.identifier == Self.paywallID }
+    private func purchase(_ product: Product) async throws(SubscriptionError) -> PurchaseOutcome {
+        let result = await Apphud.purchase(product)
+        refresh()
+        if result.isPending { return .pending }
+        if result.success || isPremium { return .purchased }
+        if result.error == nil || (result.error as? SKError)?.code == .paymentCancelled { return .cancelled }
+        throw .purchaseFailed
     }
     
-    private func loadedPaywallsWhenReady() async -> [ApphudPaywall] {
-        if let loadedPaywalls { return loadedPaywalls }
-        return await withCheckedContinuation { paywallWaiters.append($0) }
+    private func productsFromPermissionGroups() async -> [Product] {
+        let available = Set((await Apphud.permissionGroups() ?? []).flatMap(\.productIds))
+        let ids = Self.paywallProductIDs.filter(available.contains)
+        guard !ids.isEmpty, let products = try? await Product.products(for: ids) else { return [] }
+        return ids.compactMap { id in products.first { $0.id == id } }
     }
     
     private func refresh() {
@@ -120,14 +133,5 @@ final class ApphudSubscriptionService: SubscribableService {
             case (.year, 1): .year
             default: .other
         }
-    }
-}
-
-extension ApphudSubscriptionService: @preconcurrency ApphudDelegate {
-    func paywallsDidFullyLoad(paywalls: [ApphudPaywall]) {
-        loadedPaywalls = paywalls
-        let waiters = paywallWaiters
-        paywallWaiters = []
-        waiters.forEach { $0.resume(returning: paywalls) }
     }
 }
