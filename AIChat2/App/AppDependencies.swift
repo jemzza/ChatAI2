@@ -12,4 +12,7 @@ struct AppDependencies {
     let photoAccess: any PhotoLibraryAccess
     let photoSaver: any PhotoSaving
     let thumbnails: any VideoThumbnailing
+    let settings: any SettingsStorable
+    let notifications: any LocalNotificationScheduling
+    let cache: any CacheManaging
 }

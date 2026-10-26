@@ -50,19 +50,7 @@ struct RootView: View {
             case let .history(tab):
                 HistoryView(tab: tab, dependencies: dependencies)
             case .settings:
-                UnderConstructionView()
+                SettingsView(dependencies: dependencies)
         }
-    }
-}
-
-private struct UnderConstructionView: View {
-    @EnvironmentObject private var router: AppRouter
-    
-    var body: some View {
-        VStack(spacing: 0) {
-            NavigationHeader { router.pop() }
-            Spacer()
-        }
-        .background(Color.appBackground.ignoresSafeArea())
     }
 }

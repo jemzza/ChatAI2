@@ -11,6 +11,7 @@ final class ChatService {
     private let provider: any ChatProvider
     private let connectivity: any ConnectivityMonitoring
     private let backgroundTasks: (any BackgroundTaskScheduling)?
+    private let notifier: (any ActivityNotifying)?
     private let now: () -> Date
 
     private var generations: [UUID: Generation] = [:]
@@ -22,12 +23,14 @@ final class ChatService {
         provider: any ChatProvider,
         connectivity: any ConnectivityMonitoring,
         backgroundTasks: (any BackgroundTaskScheduling)? = nil,
+        notifier: (any ActivityNotifying)? = nil,
         now: @escaping () -> Date = Date.init
     ) {
         self.repository = repository
         self.provider = provider
         self.connectivity = connectivity
         self.backgroundTasks = backgroundTasks
+        self.notifier = notifier
         self.now = now
     }
 
@@ -157,9 +160,12 @@ final class ChatService {
 
         let repository = repository
         let result = (text: text, failure: failure)
-        await Task {
-            try? await repository.updateMessage(id: messageId, text: result.text, status: status, failure: result.failure)
+        let saved = await Task {
+            (try? await repository.updateMessage(id: messageId, text: result.text, status: status, failure: result.failure)) != nil
         }.value
+        if saved, status == .done {
+            await notifier?.replyDidFinish(text: result.text)
+        }
         finishGeneration(chatId: chatId, messageId: messageId)
     }
 

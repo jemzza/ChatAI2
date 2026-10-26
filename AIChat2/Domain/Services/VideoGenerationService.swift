@@ -15,6 +15,7 @@ final class VideoGenerationService {
     private let media: any MediaStoring
     private let connectivity: any ConnectivityMonitoring
     private let backgroundTasks: (any BackgroundTaskScheduling)?
+    private let notifier: (any ActivityNotifying)?
     private let configuration: Configuration
     private let now: () -> Date
 
@@ -26,6 +27,7 @@ final class VideoGenerationService {
         media: any MediaStoring,
         connectivity: any ConnectivityMonitoring,
         backgroundTasks: (any BackgroundTaskScheduling)? = nil,
+        notifier: (any ActivityNotifying)? = nil,
         configuration: Configuration = Configuration(),
         now: @escaping () -> Date = Date.init
     ) {
@@ -34,6 +36,7 @@ final class VideoGenerationService {
         self.media = media
         self.connectivity = connectivity
         self.backgroundTasks = backgroundTasks
+        self.notifier = notifier
         self.configuration = configuration
         self.now = now
     }
@@ -126,6 +129,7 @@ final class VideoGenerationService {
             }
             if generation.status == .succeeded {
                 await download(generation)
+                await notifier?.videoDidFinish(templateName: generation.templateName)
             }
         } catch is CancellationError {
         } catch let error as APIError where error.kind == .offline {

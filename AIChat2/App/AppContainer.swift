@@ -1,5 +1,6 @@
 import Alamofire
 import Foundation
+import UIKit
 
 @MainActor
 final class AppContainer {
@@ -42,11 +43,16 @@ extension AppContainer {
 #endif
         let connectivity = makeConnectivity(plan.network)
         let backgroundTasks = UIKitBackgroundTasks()
+        let scheduler = UserNotificationScheduler()
+        let notifier = NotificationService(settings: settings, scheduler: scheduler) {
+            UIApplication.shared.applicationState == .active
+        }
         let chat = ChatService(
             repository: chats,
             provider: makeChatProvider(plan.model, subscription: subscription),
             connectivity: connectivity,
-            backgroundTasks: backgroundTasks
+            backgroundTasks: backgroundTasks,
+            notifier: notifier
         )
         let videos = GRDBVideoRepository(database: database)
         let videoAPI = makeVideoAPI(plan.storage, subscription: subscription)
@@ -56,7 +62,8 @@ extension AppContainer {
             api: videoAPI,
             media: media,
             connectivity: connectivity,
-            backgroundTasks: backgroundTasks
+            backgroundTasks: backgroundTasks,
+            notifier: notifier
         )
         
         return AppDependencies(
@@ -69,7 +76,10 @@ extension AppContainer {
             video: video,
             photoAccess: SystemPhotoLibraryAccess(),
             photoSaver: SystemPhotoSaver(),
-            thumbnails: makeThumbnails(plan.storage)
+            thumbnails: makeThumbnails(plan.storage),
+            settings: settings,
+            notifications: scheduler,
+            cache: FileCacheManager.standard()
         )
     }
     
