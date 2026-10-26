@@ -9,10 +9,13 @@ final class ApphudSubscriptionService: SubscribableService {
     private let premium: Broadcast<Bool>
     private var updatesTask: Task<Void, Never>?
     private var paywall: ApphudPaywall?
+    private var loadedPaywalls: [ApphudPaywall]?
+    private var paywallWaiters: [CheckedContinuation<[ApphudPaywall], Never>] = []
     
     init(apiKey: String) {
         Apphud.start(apiKey: apiKey)
         premium = Broadcast(Apphud.hasPremiumAccess())
+        Apphud.setDelegate(self)
         updatesTask = Task { [weak self] in
             for await _ in NotificationCenter.default.notifications(named: Apphud.didUpdateNotification()) {
                 self?.refresh()
@@ -33,8 +36,10 @@ final class ApphudSubscriptionService: SubscribableService {
     
     func paywallPlans() async throws(SubscriptionError) -> [SubscriptionPlan] {
         let placements = await Apphud.placements()
-        let paywall = placements.lazy.compactMap(\.paywall).first { $0.identifier == Self.paywallID }
-        ?? placements.first { $0.identifier == Self.paywallID }?.paywall
+        let fromPlacements = placements.lazy.compactMap(\.paywall).first { $0.identifier == Self.paywallID }
+            ?? placements.first { $0.identifier == Self.paywallID }?.paywall
+        var paywall = fromPlacements
+        if paywall == nil { paywall = await paywallWithoutPlacement() }
         guard let paywall else { throw .productsUnavailable }
         self.paywall = paywall
         
@@ -68,6 +73,16 @@ final class ApphudSubscriptionService: SubscribableService {
         refresh()
         if result?.error != nil, !isPremium { throw .restoreFailed }
         return isPremium
+    }
+    
+    private func paywallWithoutPlacement() async -> ApphudPaywall? {
+        let paywalls = await loadedPaywallsWhenReady()
+        return paywalls.first { $0.identifier == Self.paywallID }
+    }
+    
+    private func loadedPaywallsWhenReady() async -> [ApphudPaywall] {
+        if let loadedPaywalls { return loadedPaywalls }
+        return await withCheckedContinuation { paywallWaiters.append($0) }
     }
     
     private func refresh() {
@@ -105,5 +120,14 @@ final class ApphudSubscriptionService: SubscribableService {
             case (.year, 1): .year
             default: .other
         }
+    }
+}
+
+extension ApphudSubscriptionService: @preconcurrency ApphudDelegate {
+    func paywallsDidFullyLoad(paywalls: [ApphudPaywall]) {
+        loadedPaywalls = paywalls
+        let waiters = paywallWaiters
+        paywallWaiters = []
+        waiters.forEach { $0.resume(returning: paywalls) }
     }
 }
