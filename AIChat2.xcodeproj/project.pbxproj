@@ -417,6 +417,7 @@
 				DEVELOPMENT_TEAM = 946NQ7ZBS2;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "AI Chat";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "The app saves generated videos to your Photos.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "To upload an image, the app needs access to your photo gallery.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -452,6 +453,7 @@
 				DEVELOPMENT_TEAM = 946NQ7ZBS2;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "AI Chat";
 				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "The app saves generated videos to your Photos.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "To upload an image, the app needs access to your photo gallery.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
