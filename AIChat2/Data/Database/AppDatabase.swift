@@ -6,6 +6,9 @@ nonisolated struct AppDatabase: Sendable {
     
     init(_ writer: any DatabaseWriter) throws {
         self.writer = writer
+        if try writer.read(Self.migrator.hasBeenSuperseded) {
+            try writer.erase()
+        }
         try Self.migrator.migrate(writer)
     }
     
