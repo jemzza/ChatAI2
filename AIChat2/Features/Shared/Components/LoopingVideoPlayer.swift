@@ -21,8 +21,7 @@ struct LoopingVideoPlayer: UIViewRepresentable {
     }
     
     static func dismantleUIView(_ view: PlayerView, coordinator: ()) {
-        view.player.pause()
-        view.player.removeAllItems()
+        view.stop()
     }
     
     final class PlayerView: UIView {
@@ -37,8 +36,15 @@ struct LoopingVideoPlayer: UIViewRepresentable {
             guard let playerLayer = layer as? AVPlayerLayer else { return }
             playerLayer.player = player
             playerLayer.videoGravity = gravity
-            player.removeAllItems()
+            stop()
             looper = AVPlayerLooper(player: player, templateItem: AVPlayerItem(url: url))
+        }
+        
+        func stop() {
+            looper?.disableLooping()
+            looper = nil
+            player.pause()
+            player.removeAllItems()
         }
     }
 }
