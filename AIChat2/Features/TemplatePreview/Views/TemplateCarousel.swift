@@ -7,7 +7,8 @@ struct TemplateCarousel: View {
     
     private let cardWidth: CGFloat = 331
     private let spacing: CGFloat = 16
-    @GestureState private var drag: CGFloat = 0
+    @State private var drag: CGFloat = 0
+    @State private var playingIndex: Int?
     
     var body: some View {
         GeometryReader { proxy in
@@ -17,7 +18,7 @@ struct TemplateCarousel: View {
                 ForEach(Array(templates.enumerated()), id: \.element.id) { offset, template in
                     card(
                         template,
-                        isCurrent: offset == index,
+                        isPlaying: offset == playingIndex,
                         isNear: abs(offset - index) <= 2,
                         size: CGSize(width: cardWidth, height: proxy.size.height)
                     )
@@ -26,26 +27,31 @@ struct TemplateCarousel: View {
             .offset(x: leading - CGFloat(index) * step + drag)
             .gesture(
                 DragGesture()
-                    .updating($drag) { value, state, _ in state = value.translation.width }
+                    .onChanged { drag = $0.translation.width }
                     .onEnded { value in
                         let delta = Int((-value.predictedEndTranslation.width / step).rounded())
                         withAnimation(.spring(response: 0.4, dampingFraction: 0.85)) {
                             index = min(max(index + max(min(delta, 1), -1), 0), max(templates.count - 1, 0))
+                            drag = 0
                         }
                     }
             )
         }
         .clipped()
+        .task(id: index) {
+            playingIndex = nil
+            guard (try? await Task.sleep(for: .milliseconds(400))) != nil else { return }
+            playingIndex = index
+        }
     }
     
     @ViewBuilder
-    private func card(_ template: VideoTemplate, isCurrent: Bool, isNear: Bool, size: CGSize) -> some View {
+    private func card(_ template: VideoTemplate, isPlaying: Bool, isNear: Bool, size: CGSize) -> some View {
         ZStack {
             if isNear {
                 VideoThumbnailView(url: template.previewURL, thumbnails: thumbnails, maxPixelSize: 700)
-                if isCurrent, let url = template.previewURL {
+                if isPlaying, let url = template.previewURL {
                     LoopingVideoPlayer(url: url)
-                        .transition(.opacity)
                 }
             } else {
                 Color.appSurface
