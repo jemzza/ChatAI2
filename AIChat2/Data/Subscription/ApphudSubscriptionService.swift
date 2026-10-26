@@ -19,8 +19,9 @@ final class ApphudSubscriptionService: SubscribableService {
         Apphud.start(apiKey: apiKey)
         premium = Broadcast(Apphud.hasPremiumAccess())
         updatesTask = Task { [weak self] in
+            await self?.refresh()
             for await _ in NotificationCenter.default.notifications(named: Apphud.didUpdateNotification()) {
-                self?.refresh()
+                await self?.refresh()
             }
         }
     }
@@ -68,7 +69,7 @@ final class ApphudSubscriptionService: SubscribableService {
             throw .purchaseFailed
         }
         let result = await Apphud.purchase(product)
-        refresh()
+        await refresh()
         if result.userCanceled { return .cancelled }
         if result.isPending { return .pending }
         guard result.error == nil, result.success || isPremium else { throw .purchaseFailed }
@@ -77,14 +78,14 @@ final class ApphudSubscriptionService: SubscribableService {
     
     func restore() async throws(SubscriptionError) -> Bool {
         let result = await Apphud.restorePurchases()
-        refresh()
+        await refresh()
         if result?.error != nil, !isPremium { throw .restoreFailed }
         return isPremium
     }
     
     private func purchase(_ product: Product) async throws(SubscriptionError) -> PurchaseOutcome {
         let result = await Apphud.purchase(product)
-        refresh()
+        await refresh()
         if result.isPending { return .pending }
         if result.success || isPremium { return .purchased }
         if result.error == nil || (result.error as? SKError)?.code == .paymentCancelled { return .cancelled }
@@ -98,8 +99,17 @@ final class ApphudSubscriptionService: SubscribableService {
         return ids.compactMap { id in products.first { $0.id == id } }
     }
     
-    private func refresh() {
-        premium.set(Apphud.hasPremiumAccess())
+    private func refresh() async {
+        var hasAccess = Apphud.hasPremiumAccess()
+        if !hasAccess {
+            for await result in Transaction.currentEntitlements {
+                if case let .verified(transaction) = result, transaction.revocationDate == nil {
+                    hasAccess = true
+                    break
+                }
+            }
+        }
+        premium.set(hasAccess)
     }
     
     private static func weeks(in period: Product.SubscriptionPeriod) -> Decimal? {
